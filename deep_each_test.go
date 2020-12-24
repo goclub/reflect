@@ -273,7 +273,7 @@ func TestDeepEach1(t *testing.T) {
 			JSONTag: field.Tag.Get("json"),
 			CanNotSet: !rValue.CanSet(),
 		})
-		return
+		return op.Continue()
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, infos, actualInfos)
@@ -290,7 +290,7 @@ func TestEachOperator(t *testing.T) {
 		if rValue.String() == "b" {
 			return op.Break()
 		}
-		return
+		return op.Continue()
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, msg, "ab")
@@ -308,7 +308,7 @@ func TestDeepEach1Map(t *testing.T) {
 		if rType.Kind() == reflect.String {
 			rValue.SetString(rValue.String() + "!")
 		}
-		return
+		return op.Continue()
 	})
 	assert.NoError(t ,err)
 	assert.Equal(t, data, map[string]*Item{"name":{"nimoc!"}})
@@ -318,7 +318,7 @@ func TestDeepEach1Error(t *testing.T) {
 		if rValue.Int() == 2 {
 			return op.Error(errors.New("value can not be 2"))
 		}
-		return
+		return op.Continue()
 	})
 	assert.Equal(t, err.Error(), "value can not be 2")
 }
@@ -341,7 +341,7 @@ func TestDeepEach1Tree(t *testing.T) {
 	var names []string
 	err := DeepEach1(&node, func(rValue reflect.Value, rType reflect.Type, field reflect.StructField) (op EachOperator) {
 		names  = append(names, field.Name)
-		return
+		return op.Continue()
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, names, []string{"Name", "Value","Node", "Name", "Value"})

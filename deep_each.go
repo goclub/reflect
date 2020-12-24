@@ -23,6 +23,9 @@ func (op EachOperator) Error(err error) EachOperator {
 		shouldBreak: true,
 	}
 }
+func (op EachOperator) Continue() EachOperator {
+	return EachOperator{}
+}
 func (op EachOperator) Break() EachOperator {
 	return EachOperator{
 		shouldBreak: true,
